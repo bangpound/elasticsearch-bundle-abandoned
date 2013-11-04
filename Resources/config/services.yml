@@ -1,0 +1,36 @@
+parameters:
+    bangpound_elasticsearch.client.class: Elasticsearch\Client
+    bangpound_elasticsearch.logger.class: FOS\ElasticaBundle\Logger\ElasticaLogger
+#    bangpound_elasticsearch.data_collector.class: FOS\ElasticaBundle\DataCollector\ElasticaDataCollector
+#    bangpound_elasticsearch.manager.class: FOS\ElasticaBundle\Manager\RepositoryManager
+#    bangpound_elasticsearch.elastica_to_model_transformer.collection.class: FOS\ElasticaBundle\Transformer\ElasticaToModelTransformerCollection
+#    bangpound_elasticsearch.provider_registry.class: FOS\ElasticaBundle\Provider\ProviderRegistry
+#    bangpound_elasticsearch.property_accessor.class: Symfony\Component\PropertyAccess\PropertyAccessor
+    bangpound_elasticsearch.resetter.class: Bangpound\Bundle\ElasticsearchBundle\Resetter
+
+services:
+    bangpound_elasticsearch.logger:
+        class: %bangpound_elasticsearch.logger.class%
+        arguments: [ @logger, %kernel.debug% ]
+        tags:
+            - { name: "monolog.logger", channel: "elasticsearch" }
+
+#    bangpound_elasticsearch.data_collector:
+#        class: %bangpound_elasticsearch.data_collector.class%
+#        public: true
+#        arguments: [ @bangpound_elasticsearch.logger ]
+#        tags:
+#            - { name: "data_collector", template: "BangpoundElasticsearchBundle:Collector:elasticsearch", id: "elasticsearch" }
+
+
+    bangpound_elasticsearch.client:
+        class: %bangpound_elasticsearch.client.class%
+        arguments: [ ~ ]
+        calls:
+            - [ setLogger, [ "@bangpound_elasticsearch.logger" ] ]
+        tags:
+            - { name: 'bangpound_elasticsearch.client' }
+
+    bangpound_elasticsearch.resetter:
+        class: %bangpound_elasticsearch.resetter.class%
+        arguments: [ ~ ]

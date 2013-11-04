@@ -1,0 +1,3 @@
+bangpound_elasticsearch_homepage:
+    path:  /elasticsearch/config
+    defaults: { _controller: BangpoundElasticsearchBundle:Default:index }

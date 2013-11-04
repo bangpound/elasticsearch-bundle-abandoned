@@ -1,0 +1,20 @@
+{
+    "name": "bangpound/elasticsearch-bundle",
+    "description": "Symfony bundle for Elasticsearch PHP library",
+    "require": {
+        "elasticsearch/elasticsearch": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "Bangpound\\Bundle\\ElasticsearchBundle\\": ""
+        }
+    },
+    "target-dir": "Bangpound/Bundle/ElasticsearchBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Benjamin Doherty",
+            "email": "bjd@bangpound.org"
+        }
+    ]
+}
