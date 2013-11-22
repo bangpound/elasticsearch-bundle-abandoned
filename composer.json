@@ -2,7 +2,7 @@
     "name": "bangpound/elasticsearch-bundle",
     "description": "Symfony bundle for Elasticsearch PHP library",
     "require": {
-        "elasticsearch/elasticsearch": "dev-master"
+        "elasticsearch/elasticsearch": "~0.4"
     },
     "autoload": {
         "psr-0": {
