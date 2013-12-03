@@ -1,6 +1,5 @@
 parameters:
     bangpound_elasticsearch.client.class: Elasticsearch\Client
-    bangpound_elasticsearch.logger.class: FOS\ElasticaBundle\Logger\ElasticaLogger
 #    bangpound_elasticsearch.data_collector.class: FOS\ElasticaBundle\DataCollector\ElasticaDataCollector
 #    bangpound_elasticsearch.manager.class: FOS\ElasticaBundle\Manager\RepositoryManager
 #    bangpound_elasticsearch.elastica_to_model_transformer.collection.class: FOS\ElasticaBundle\Transformer\ElasticaToModelTransformerCollection
@@ -33,4 +32,4 @@ services:
 
     bangpound_elasticsearch.resetter:
         class: %bangpound_elasticsearch.resetter.class%
-        arguments: [ ~ ]
+        arguments: [ @bangpound_elasticsearch.client, %bangpound_elasticsearch.setup%, %bangpound_elasticsearch.index.params%, %bangpound_elasticsearch.setup.mapping.params% ]

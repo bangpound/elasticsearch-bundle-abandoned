@@ -7,16 +7,38 @@ namespace Bangpound\Bundle\ElasticsearchBundle;
  */
 class Resetter
 {
-    protected $indexConfigsByName;
+    /**
+     * @var \Elasticsearch\Client
+     */
+    private $client;
 
     /**
-     * Constructor.
-     *
-     * @param array $indexConfigsByName
+     * @var
      */
-    public function __construct(array $indexConfigsByName)
+    private $setup;
+
+    /**
+     * @var
+     */
+    private $index_params;
+
+    /**
+     * @var
+     */
+    private $mapping_params;
+
+    /**
+     * @param Client $client
+     * @param $setup
+     * @param $index_params
+     * @param $mapping_params
+     */
+    public function __construct(Client $client, $setup, $index_params, $mapping_params)
     {
-        $this->indexConfigsByName = $indexConfigsByName;
+        $this->client = $client;
+        $this->setup = $setup;
+        $this->index_params = $index_params;
+        $this->mapping_params = $mapping_params;
     }
 
     /**
@@ -24,7 +46,7 @@ class Resetter
      */
     public function resetAllIndexes()
     {
-        foreach ($this->indexConfigsByName as $name => $indexConfig) {
+        foreach (array_keys($this->setup) as $name) {
             $this->resetIndex($name);
         }
     }
@@ -39,18 +61,23 @@ class Resetter
     {
         $client = new \Elasticsearch\Client();
         $params = array(
-            'index' => $this->indexConfigsByName[$indexName]['index_name'],
+            'index' => $indexName,
         );
         if ($client->indices()->exists($params)) {
             $result = $client->indices()->delete($params);
         }
+        if (isset($this->index_params[$indexName])) {
+            $params['body'] = $this->index_params[$indexName];
+        }
         $result = $client->indices()->create($params);
 
-        foreach ($this->indexConfigsByName[$indexName]['types'] as $type => $settings) {
+        foreach ($this->setup[$indexName] as $type) {
             $params = array(
-                'index' => $this->indexConfigsByName[$indexName]['index_name'],
+                'index' => $indexName,
                 'type' => $type,
-                'body' => array($type => $settings),
+                'body' => [
+                    $type => $this->mapping_params[$type],
+                ],
             );
             $result = $client->indices()->putMapping($params);
         }
